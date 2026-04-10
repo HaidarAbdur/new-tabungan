@@ -62,7 +62,6 @@
 #     else:
 #      print('Input tidak valid!')
 #     continue
-
 import streamlit as st
 import pandas as pd
 import json
@@ -174,7 +173,8 @@ with tab4:
                 st.session_state.reset_confirm = False
                 st.rerun()
 
-st.caption("Data otomatis tersimpan • Dibuat dengan Python + Streamlit")
+st.caption("• Created by HaidarCode" \
+"Python & Streamlit")
        
 
 
