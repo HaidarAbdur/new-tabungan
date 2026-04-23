@@ -86,8 +86,8 @@ data = load_data()
 saldo = data.get("saldo", 0)
 transaksi = data.get("transaksi", [])
 
-st.title("💰 TabungKu - Aplikasi Tabunganmu")
-st.markdown("### Kelola keuanganmu dengan mudah")
+st.title("💰 Tabunganku - Aplikasi Tabungan")
+st.markdown("### Kelola keuangan dengan mudah dan aman diera digital")
 
 # Tampilkan Saldo
 st.metric(label="**Saldo Saat Ini**", value=f"Rp {saldo:,.0f}", delta=None)
@@ -153,7 +153,7 @@ with tab3:
 
 with tab4:
     st.subheader("⚙️ Pengaturan")
-    st.warning("⚠️ Fitur ini akan menghapus semua data!")
+    st.warning("⚠️ Fitur ini akan mereset semua data!")
     
     if st.button("🔄 Reset Saldo ke Rp 0", type="secondary"):
         st.session_state.reset_confirm = True
@@ -173,8 +173,7 @@ with tab4:
                 st.session_state.reset_confirm = False
                 st.rerun()
 
-st.caption("• Created by HaidarCode" \
-"Python & Streamlit")
+st.caption("• Created by HaidarCode")
        
 
 
