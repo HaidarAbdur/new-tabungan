@@ -64,21 +64,40 @@
 #     continue
 import streamlit as st
 import pandas as pd
-import json
 from datetime import datetime
-import os
+import mysql.connector
 
-DATA_FILE = "tabunganku_data.json"
+conn = mysql.connector.connect(
+    host= "localhost",
+    user= "root",
+    password= "",
+    database= "db_tabungan"
+)
+
+cursor = conn.cursor()
 
 def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {"saldo": 0, "transaksi": []}
+    cursor.execute("SELECT * FROM transaksi")
+    rows = cursor.fetchall
 
-def save_data(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4, default=str)
+    transaksi = []
+    saldo = 0
+
+    for row in rows:
+        t = {
+            "tanggal":row[1],
+            "tipe":row[2],
+            "jumlah":row[3],
+            "keterangan":row[4]
+        }
+        transaksi.append(t)
+
+        if t["tipe"]=="pemasukan":
+            saldo += t["jumlah"]
+        else:
+            saldo -= t["jumlah"]
+
+        return saldo, transaksi
 
 st.set_page_config(page_title="TabungKu", page_icon="💰", layout="centered")
 
