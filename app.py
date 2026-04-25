@@ -62,6 +62,7 @@
 #     else:
 #      print('Input tidak valid!')
 #     continue
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -101,9 +102,7 @@ def load_data():
 
 st.set_page_config(page_title="TabungKu", page_icon="💰", layout="centered")
 
-data = load_data()
-saldo = data.get("saldo", 0)
-transaksi = data.get("transaksi", [])
+saldo,transaksi = load_data()
 
 st.title("💰 Tabunganku - Aplikasi Tabungan")
 st.markdown("### Kelola keuangan dengan mudah dan aman diera digital")
@@ -119,16 +118,11 @@ with tab1:
     ket = st.text_input("Keterangan (contoh: Gaji, THR, dll)")
     if st.button("Tambahkan", type="primary"):
         if jumlah > 0 and ket:
-            saldo += jumlah
-            transaksi.append({
-                "tanggal": datetime.now().strftime("%d/%m/%Y %H:%M"),
-                "tipe": "Pemasukan",
-                "jumlah": jumlah,
-                "keterangan": ket
-            })
-            data["saldo"] = saldo
-            data["transaksi"] = transaksi
-            save_data(data)
+            tanggal = datetime.now().strftime("%d/%m/%Y %H:%M")
+            sql = "INSERT INTO transaksi (tanggal, tipe, jumlah, keterangan) VALUES (%s, %s, %s, %s)"
+            val = (tanggal, "Pemasukan", jumlah, ket)
+            cursor.execute(sql, val)
+            conn.commit()
             st.success("✅ Pemasukan berhasil ditambahkan!")
             st.rerun()
         else:
@@ -142,16 +136,11 @@ with tab2:
         if jumlah_k > saldo:
             st.error("❌ Saldo tidak cukup!")
         elif jumlah_k > 0 and ket_k:
-            saldo -= jumlah_k
-            transaksi.append({
-                "tanggal": datetime.now().strftime("%d/%m/%Y %H:%M"),
-                "tipe": "Pengeluaran",
-                "jumlah": jumlah_k,
-                "keterangan": ket_k
-            })
-            data["saldo"] = saldo
-            data["transaksi"] = transaksi
-            save_data(data)
+            tanggal = datetime.now().strftime("%d/%m/%Y %H:%M")
+            sql = "INSERT INTO transaksi (tanggal, tipe, jumlah, keterangan) VALUES (%s, %s, %s, %s)"
+            val = (tanggal, "Pengeluaran", jumlah_k, ket_k)
+            cursor.execute(sql, val)
+            conn.commit()
             st.success("✅ Pengeluaran berhasil dicatat!")
             st.rerun()
 
